@@ -324,6 +324,60 @@ def launch_instance(idx: int, headless: bool, extensions: list, startup_urls: li
             
             Object.defineProperty(navigator, 'webdriver', {{get: () => false}});
             
+            // === AudioContext spoofing ===
+            try {{
+                const origGetChannelData = AudioBuffer.prototype.getChannelData;
+                AudioBuffer.prototype.getChannelData = function() {{
+                    const data = origGetChannelData.apply(this, arguments);
+                    // 注入微小隨機噪聲
+                    for (let i = 0; i < data.length; i += 100) {{
+                        data[i] = data[i] + (Math.random() - 0.5) * 1e-7;
+                    }}
+                    return data;
+                }};
+                // 偽造 AudioContext 屬性
+                if (window.OfflineAudioContext) {{
+                    Object.defineProperty(OfflineAudioContext.prototype, 'sampleRate', {{
+                        get: function() {{ return 44100; }}
+                    }});
+                }}
+                if (window.AudioContext) {{
+                    Object.defineProperty(AudioContext.prototype, 'sampleRate', {{
+                        get: function() {{ return 44100; }}
+                    }});
+                }}
+            }} catch(e) {{}}
+            // === mediaDevices spoofing ===
+            try {{
+                if (navigator.mediaDevices) {{
+                    // 偽造 enumerateDevices 返回值
+                    navigator.mediaDevices.enumerateDevices = function() {{
+                        return Promise.resolve([
+                            {{
+                                kind: "videoinput",
+                                label: "Fake Camera",
+                                deviceId: "fake-camera-id",
+                                groupId: "fake-group-id"
+                            }},
+                            {{
+                                kind: "audioinput",
+                                label: "Fake Microphone",
+                                deviceId: "fake-mic-id",
+                                groupId: "fake-group-id"
+                            }}
+                        ]);
+                    }};
+                    // 偽造 mediaDevices 屬性
+                    Object.defineProperty(navigator, 'mediaDevices', {{
+                        get: function() {{
+                            return {{
+                                enumerateDevices: navigator.mediaDevices.enumerateDevices
+                            }};
+                        }},
+                        configurable: true
+                    }});
+                }}
+            }} catch(e) {{}}
             console.log("Canvas指紋欺騙已啟用，種子:", seed);
         }})();
         """
