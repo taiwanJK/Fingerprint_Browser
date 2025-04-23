@@ -27,6 +27,7 @@ pip install -r requirements.txt
 ```
 3. 配置 config.json 文件，根據需要修改配置參數。
 4. 準備擴展目錄
+> 注意：browser_data 資料夾需要自己手動建立，用於存儲瀏覽器配置文件。
 
 ## 擴展安裝
 
@@ -82,20 +83,7 @@ python fingerprint_browser.py --extensions Oxylabs canvas_spoofer
 
 ## 目錄結構
 
-Fingerprint_Browser/
-├── fingerprint_browser.py  # 主程序
-├── config.json             # 配置文件
-├── README.md               # 說明文檔
-├── browser_data/           # 瀏覽器配置文件存儲目錄
-│   ├── profile_0/          # 第一個實例的配置文件
-│   ├── profile_1/          # 第二個實例的配置文件
-│   └── ...
-└── extensions/             # 擴展目錄
-    ├── Oxylabs/            # Oxylabs 擴展
-    ├── canvas_spoofer/     # Canvas 指紋欺騙擴展基礎目錄
-    ├── canvas_spoofer_0/   # 第一個實例的 Canvas 指紋欺騙擴展
-    ├── canvas_spoofer_1/   # 第二個實例的 Canvas 指紋欺騙擴展
-    └── ...
+![目錄結構](./directory.png)
 
 ## 常見問題
 
