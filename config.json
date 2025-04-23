@@ -1,0 +1,13 @@
+{
+    "count": 2,
+    "headless": false,
+    "extensions": [
+        "Oxylabs",
+        "canvas_spoofer"
+    ],
+    "startup_urls": [
+        "https://www.google.com",
+        "https://bot.sannysoft.com/",
+        "https://browserleaks.com/canvas"
+    ]
+}
